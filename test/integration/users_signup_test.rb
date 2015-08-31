@@ -20,6 +20,16 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                           password: "foobar", password_confirmation: "foobar"}
     end
     assert_template "users/show"
+    assert_not flash.empty?
   end
+  
+  test "are error messages present" do
+    get signup_path
+    post_via_redirect users_path, user: { name: "", email: "user@invalid",
+                               password: "foo", password_confirmation: "bar"}
+    assert_select "div#error_explanation"
+    assert_select "div.field_with_errors"
+  end
+  
   
 end
